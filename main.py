@@ -1,20 +1,18 @@
-from fastapi import FastAPI, Depends, HTTPException, status
-from fastapi.security import OAuth2PasswordBearer
+from flask import Flask, request, jsonify
 
-app = FastAPI()
+app = Flask(__name__)
 
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
-
+# Ustawienia tokenu
 SECRET_TOKEN = "supersecrettoken123"
 
-def verify_token(token: str = Depends(oauth2_scheme)):
-    if token != SECRET_TOKEN:
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Niepoprawny token",
-            headers={"WWW-Authenticate": "Bearer"},
-        )
+# Endpoint zabezpieczony tokenem
+@app.route("/secure-data", methods=["GET"])
+def secure_data():
+    token = request.headers.get("Authorization")
+    if token == f"Bearer {SECRET_TOKEN}":
+        return jsonify({"message": "sukces"})
+    else:
+        return jsonify({"detail": "Niepoprawny token"}), 401
 
-@app.get("/secure-data")
-def secure_data(token: str = Depends(verify_token)):
-    return {"message": "sukces"}
+if __name__ == "__main__":
+    app.run(host="0.0.0.0", port=80)
