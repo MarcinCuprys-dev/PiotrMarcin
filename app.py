@@ -1,10 +1,9 @@
 import os
-
-from flask import (Flask, redirect, render_template, request,
-                   send_from_directory, url_for)
+from flask import Flask, jsonify, redirect, render_template, request, send_from_directory, url_for
 
 app = Flask(__name__)
 
+AUTHORIZED_TOKEN = "sekretny_token"
 
 @app.route('/')
 def index():
@@ -12,11 +11,15 @@ def index():
    return render_template('index.html')
 
 
-# @app.route('/hello', methods=['POST'])
-# def hello():
-#     name = request.form.get('name')
-#     return render_template('hello.html', name = name)
-
+@app.route('/hello', methods=['POST'])
+def hello():
+    auth_token = request.headers.get('Authorization')
+    
+    if auth_token == AUTHORIZED_TOKEN:
+        name = request.form.get('name')
+        return jsonify({"message": f"Witaj, {name}!"}), 200
+    else:
+        return jsonify({"error": "Nieautoryzowany dostęp"}), 401
 
 if __name__ == '__main__':
    app.run()
