@@ -5,7 +5,7 @@ from datetime import datetime
 app = Flask(__name__)
 app.secret_key = 'twoj_tajny_klucz' 
 
-conn_str = 'DRIVER={ODBC Driver 18 for SQL Server};SERVER=tcp:sqlczu.database.windows.net,1433;DATABASE=czupsqlpiotr;UID=piotr;PWD=Jt3DMrZt68Hhpo;Encrypt=yes;TrustServerCertificate=no;Connection Timeout=30;'
+conn_str = 'DRIVER={ODBC Driver 18 for SQL Server};SERVER=tcp:34.69.79.232,1433;DATABASE=master;UID=sqlserver;PWD=Haslo123.;Encrypt=yes;TrustServerCertificate=no;Connection Timeout=30;'
 
 def get_db_connection():
     return pyodbc.connect(conn_str)
